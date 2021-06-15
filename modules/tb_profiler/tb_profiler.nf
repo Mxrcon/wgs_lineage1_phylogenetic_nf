@@ -6,20 +6,21 @@ process TBPROFILER_PROFILE {
     publishDir "${params.resultsDir}/tb_profiler/profile", mode: params.saveMode, enabled: params.shouldPublish
 
     input:
-    tuple val(genomeName), path(genomeReads)
+    tuple val(genomeName), file(genomeReads)
 
     output:
-    tuple path("results/*txt"), path("results/*json")
     path("results/*")
+    tuple path("results/*txt"), path("results/*json")
+
 
     script:
     """
-    tb-profiler profile -1 ${genomeReads[0]} -2 ${genomeReads[1]}  -t ${task.cpus} -p ${genomeName} --txt
+    tb-profiler profile -1 ${genomeReads[0]} -2 ${genomeReads[1]}  -t ${task.cpus} -p $genomeName --txt
     """
 
     stub:
     """
-    echo "tb-profiler profile -1 ${genomeReads[0]} -2 ${genomeReads[1]}  -t ${task.cpus} -p ${genomeName} --txt"
+    echo "tb-profiler profile -1 ${genomeReads[0]} -2 ${genomeReads[1]}  -t ${task.cpus} -p $genomeName --txt"
 
     mkdir results
     touch results/"${genomeName}.results.txt"

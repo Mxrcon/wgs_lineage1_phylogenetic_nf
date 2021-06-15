@@ -6,10 +6,10 @@ process SPOTYPING {
     publishDir "${params.resultsDir}/spotyping", mode: params.saveMode, enabled: params.shouldPublish
 
     input:
-    tuple val(genomeName), path(genomeReads)
+    tuple val(genomeName), file(genomeReads)
 
     output:
-    tuple path('*.txt'), path('SITVIT*.xls')
+    tuple file('*.txt'), file('SITVIT*.xls')
 
     script:
 

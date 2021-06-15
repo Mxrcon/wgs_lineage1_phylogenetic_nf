@@ -6,10 +6,10 @@ process SPADES {
     publishDir "${params.resultsDir}/spades", mode: params.saveMode, enabled: params.shouldPublish
 
     input:
-    tuple val(genomeName), path(genomeReads)
+    tuple val(genomeName), file(genomeReads)
 
     output:
-    tuple val(genomeName), path("*_contigs.fasta"), emit: prokka_contigs
+    tuple val(genomeName), file("*_contigs.fasta"), emit: prokka_contigs
 
 
     script:

@@ -9,7 +9,7 @@ process TRIMMOMATIC {
     tuple val(genomeName), path(genomeReads)
 
     output:
-    tuple val(genomeName), path("*_{R1,R2}.p.fastq.gz"), emit: trimmed_reads
+    tuple val(genomeName), file("*_{R1,R2}.p.fastq.gz"), emit: trimmed_reads
 
     script:
 

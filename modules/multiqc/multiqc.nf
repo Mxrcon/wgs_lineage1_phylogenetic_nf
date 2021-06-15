@@ -4,7 +4,7 @@ process MULTIQC_ORIGINAL {
     publishDir "${params.resultsDir}/multiqc/original", mode: params.saveMode, enabled: params.shouldPublish
 
     input:
-    path("*")
+    file("*")
 
     output:
     tuple path("""multiqc_data"""),

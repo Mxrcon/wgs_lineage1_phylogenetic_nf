@@ -1,7 +1,7 @@
 nextflow.enable.dsl = 2
 
 process EXPORT_RAW_GENOMES {
-    tag "${genomeName}"
+	tag "${genomeName}"
 	publishDir "${params.resultsDir}/raw_genomes", mode: params.saveMode
 	errorStrategy 'ignore'
 
@@ -9,7 +9,7 @@ process EXPORT_RAW_GENOMES {
     tuple val(genomeName), path(genomeReads)
 
     output:
-    path(genomeReads)
+    file(genomeReads)
 
     script:
     """
