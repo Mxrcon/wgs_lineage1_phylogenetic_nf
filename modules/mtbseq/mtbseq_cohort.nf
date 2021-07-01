@@ -11,10 +11,6 @@ params.should_publish = true
 
 process MTBSEQ_COHORT {
     publishDir params.results_dir, mode: params.save_mode, enabled: params.should_publish
-    validExitStatus 0, 1, 2
-    errorStrategy "retry"
-    maxRetries 2
-    maxErrors 3
 
     input:
     path(samples_tsv_ch)
@@ -33,11 +29,11 @@ process MTBSEQ_COHORT {
     gatk-register ${gatk_jar}
     sleep 10
     mkdir Joint
-    MTBseq --step TBjoin --samples ${samples_tsv_ch} --project ${params.mtbseq_project_name}
+    MTBseq --step TBjoin --samples ${samples_tsv_ch} --project ${params.mtbseq_project_name} || true
     mkdir Amend
-    MTBseq --step TBamend --samples ${samples_tsv_ch} --project ${params.mtbseq_project_name}
+    MTBseq --step TBamend --samples ${samples_tsv_ch} --project ${params.mtbseq_project_name} || true
     mkdir Groups
-    MTBseq --step TBgroups --samples ${samples_tsv_ch} --project ${params.mtbseq_project_name}
+    MTBseq --step TBgroups --samples ${samples_tsv_ch} --project ${params.mtbseq_project_name} || true
     """
 
     stub:
