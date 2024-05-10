@@ -3,8 +3,6 @@ nextflow.enable.dsl = 2
 include { EXPORT_RAW_GENOMES } from "./modules/export_raw_genomes/export_raw_genomes.nf"
 include { FASTQC as FASTQC_ORIGINAL } from "./modules/fastqc/fastqc.nf" addParams(resultsDir: "${params.outdir}/fastqc/original")
 include { FASTQC as FASTQC_TRIMMED } from "./modules/fastqc/fastqc.nf" addParams(resultsDir: "${params.outdir}/fastqc/trimmed")
-include { MTBSEQ_PER_SAMPLE } from "./modules/mtbseq/mtbseq_per_sample.nf"
-include { MTBSEQ_COHORT } from "./modules/mtbseq/mtbseq_cohort.nf"
 include { MULTIQC as MULTIQC_ORIGINAL } from "./modules/multiqc/multiqc.nf" addParams(resultsDir: "${params.outdir}/multiqc/original")
 include { MULTIQC as MULTIQC_TRIMMED } from "./modules/multiqc/multiqc.nf" addParams(resultsDir: "${params.outdir}/multiqc/trimmed")
 include { PROKKA } from "./modules/prokka/prokka.nf"
@@ -34,21 +32,6 @@ workflow {
     FASTQC_TRIMMED(TRIMMOMATIC.out.trimmed_reads)
     MULTIQC_TRIMMED(FASTQC_TRIMMED.out.flatten().collect())
 //	Analysis
-
-// TODO: Rewrite this using a sub-workflow
-    MTBSEQ_PER_SAMPLE(TRIMMOMATIC.out.trimmed_reads,params.gatkjar,params.USER)
-
-    samples_tsv_file = MTBSEQ_PER_SAMPLE.out[0]
-            .collect()
-            .flatten().map { n -> "$n" + "\t" + "${params.mtbseq_library_name}" + "\n" }
-            .collectFile(name: 'samples.tsv', newLine: false, storeDir: "${params.outdir}/mtbseq/cohort")
-
-    MTBSEQ_COHORT(
-            samples_tsv_file,
-            MTBSEQ_PER_SAMPLE.out[2].collect(),
-            MTBSEQ_PER_SAMPLE.out[3].collect(),
-            params.gatkjar,
-            params.USER)
 
     SPADES(TRIMMOMATIC.out.trimmed_reads)
     SPOTYPING(TRIMMOMATIC.out.trimmed_reads)
